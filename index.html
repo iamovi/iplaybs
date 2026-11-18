@@ -22,48 +22,48 @@ h1{font:400 clamp(3rem,11vw,5.5rem)/1 var(--display);margin:0 0 6px;color:var(--
   -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink)}
 .sub{margin:0 0 24px;color:#fff;font-weight:800;font-size:1.05rem}
 form{display:flex;gap:10px;flex-wrap:wrap}
-.field{flex:1 1 220px;display:flex;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:0 14px}
+.field{flex:1 1 220px;display:flex;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink);padding:0 14px}
 .field span{font:400 1.5rem var(--display);color:#8b82c4}
 input{flex:1;min-width:0;border:0;outline:0;background:none;font:800 1.3rem var(--body);color:var(--ink);padding:14px 6px;text-transform:uppercase}
 .field:focus-within{outline:3px solid var(--sun);outline-offset:3px}
-button{font:400 1.4rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:12px 28px;cursor:pointer}
+button{font:400 1.4rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink);padding:12px 28px;cursor:pointer}
 button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
 button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 button:disabled{opacity:.6;cursor:wait}
-.msg{margin:28px 0;padding:16px 18px;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink)}
+.msg{margin:28px 0;padding:16px 18px;background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink)}
 .msg.err{background:#ffe3e6}
-.card{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:18px;margin-top:26px}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 6px 0 var(--ink);padding:18px;margin-top:26px}
 .head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .name{font:400 clamp(2rem,7vw,3rem)/1.05 var(--display);margin:0;overflow-wrap:anywhere}
 .meta{margin:4px 0 0;color:#6a60a8;font-weight:800}
-.trophy{font:400 clamp(2.4rem,9vw,3.6rem)/1 var(--display);background:var(--sun);border:3px solid var(--ink);border-radius:14px;padding:6px 16px}
+.trophy{font:400 clamp(2.4rem,9vw,3.6rem)/1 var(--display);background:var(--sun);border:3px solid var(--ink);border-radius:0;padding:6px 16px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
-.stat{background:var(--soft);border-radius:12px;padding:10px 12px}
+.stat{background:var(--soft);border-radius:0;padding:10px 12px}
 .stat b{display:block;font:400 1.6rem var(--display)}
 .stat small{font-weight:800;color:#6a60a8}
 h2{font:400 1.7rem var(--display);margin:0 0 12px}
 .log{display:flex;gap:8px;flex-wrap:wrap}
-.chip{min-width:44px;padding:6px 10px;text-align:center;font:400 1rem var(--display);border:3px solid var(--ink);border-radius:10px;background:var(--draw)}
+.chip{min-width:44px;padding:6px 10px;text-align:center;font:400 1rem var(--display);border:3px solid var(--ink);border-radius:0;background:var(--draw)}
 .chip.victory{background:var(--win)} .chip.defeat{background:var(--loss);color:#fff}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
-.b{background:var(--soft);border:3px solid var(--ink);border-radius:14px;padding:8px;text-align:center}
+.b{background:var(--soft);border:3px solid var(--ink);border-radius:0;padding:8px;text-align:center}
 .b img{width:84px;height:84px;object-fit:contain;display:block;margin:0 auto 4px}
 .b strong{display:block;font:400 1.05rem var(--display);overflow-wrap:anywhere}
 .b span{font-weight:800;font-size:.9rem;color:#4b3f94}
 footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height:1.5}
 /* --- additions (same design language) --- */
-.hero-icon{width:84px;height:84px;flex:0 0 auto;border:3px solid var(--ink);border-radius:14px;background:var(--soft);object-fit:contain}
+.hero-icon{width:84px;height:84px;flex:0 0 auto;border:3px solid var(--ink);border-radius:0;background:var(--soft);object-fit:contain}
 .head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .head .who{flex:1 1 200px;min-width:0}
 .club{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-weight:800;color:#6a60a8}
-.club img{width:26px;height:26px;border:3px solid var(--ink);border-radius:8px;background:var(--soft)}
+.club img{width:26px;height:26px;border:3px solid var(--ink);border-radius:0;background:var(--soft)}
 .club .tag{font-family:var(--display);color:#4b3f94}
 .rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.rowbtns button{font:400 1rem var(--display);padding:6px 14px;box-shadow:0 3px 0 var(--ink);border-radius:10px}
+.rowbtns button{font:400 1rem var(--display);padding:6px 14px;box-shadow:0 3px 0 var(--ink);border-radius:0}
 .rowbtns button.alt{background:var(--soft)}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
 .summary .stat{text-align:center}
-.bar{height:16px;border:3px solid var(--ink);border-radius:10px;background:var(--soft);overflow:hidden;margin-bottom:16px}
+.bar{height:16px;border:3px solid var(--ink);border-radius:0;background:var(--soft);overflow:hidden;margin-bottom:16px}
 .bar i{display:block;height:100%;background:var(--win)}
 .log{align-items:stretch}
 .chip{display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:58px;padding:6px 8px}
@@ -72,16 +72,16 @@ footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height
 .chip.up .d{color:#0a6b39} .chip.down .d{color:#a3142a}
 .chip.victory .d,.chip.victory .t,.chip.defeat .d,.chip.defeat .t{color:inherit}
 .recent{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.recent .chip{background:var(--card);color:var(--ink);cursor:pointer;border-radius:10px;min-width:0;padding:6px 12px}
+.recent .chip{background:var(--card);color:var(--ink);cursor:pointer;border-radius:0;min-width:0;padding:6px 12px}
 .recent .chip:hover{background:var(--soft)}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.tools .field{flex:1 1 200px;box-shadow:none;border-radius:10px;border-width:2px}
+.tools .field{flex:1 1 200px;box-shadow:none;border-radius:0;border-width:2px}
 .tools .field input{font-size:1rem;padding:10px 4px}
-.tools select{font:400 1rem var(--display);color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:10px;padding:10px 12px;cursor:pointer}
+.tools select{font:400 1rem var(--display);color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:0;padding:10px 12px;cursor:pointer}
 .badges{display:flex;gap:6px;justify-content:center;margin-bottom:6px}
-.badge{font:400 .7rem var(--display);padding:2px 8px;border:2px solid var(--ink);border-radius:8px;background:var(--soft);color:#4b3f94}
+.badge{font:400 .7rem var(--display);padding:2px 8px;border:2px solid var(--ink);border-radius:0;background:var(--soft);color:#4b3f94}
 .badge.pw{background:var(--sun);color:var(--ink)}
-.empty{background:var(--soft);border-radius:12px;padding:14px;text-align:center;font-weight:800;color:#6a60a8}
+.empty{background:var(--soft);border-radius:0;padding:14px;text-align:center;font-weight:800;color:#6a60a8}
 </style>
 </head>
 <body>

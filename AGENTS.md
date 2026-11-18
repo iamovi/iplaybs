@@ -12,7 +12,7 @@
 - `BS_KEY` is set in Vercel env vars. Never commit it.
 
 ## Conventions
-- Border radius capped at `1px`.
+- Border radius is `0` everywhere; no rounded corners.
 - Escape API strings before inserting into HTML (`esc()`).
 - Preserve existing API response fields when extending the payload.
 - Keep the function dependency-free.
