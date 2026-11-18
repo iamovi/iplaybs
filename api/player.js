@@ -71,9 +71,20 @@ module.exports = async (req, res) => {
         starPowers: (b.starPowers || []).length,
         gadgets: (b.gadgets || []).length,
         gears: (b.gears || []).length,
+        hyperCharges: (b.hyperCharges || []).length,
+        starPowerNames: (b.starPowers || []).map((x) => x.name),
+        gadgetNames: (b.gadgets || []).map((x) => x.name),
+        gearNames: (b.gears || []).map((x) => x.name),
+        hyperChargeNames: (b.hyperCharges || []).map((x) => x.name),
+        buffies: b.buffies || null,
       })),
     };
 
+    const slim = (x) => ({ tag: x.tag, name: x.name, brawler: x.brawler && x.brawler.name, power: x.brawler && x.brawler.power, trophies: x.brawler && x.brawler.trophies, trophyChange: x.brawler && x.brawler.trophyChange });
+    const mineOf = (i) => {
+      const b = i.battle || {};
+      return [].concat(...(b.teams || []), b.players || []).filter((x) => x.tag === p.tag).map((x) => x.brawler)[0];
+    };
     const battles = (log.items || []).slice(0, 25).map((i) => ({
       time: i.battleTime,
       mode: (i.event && i.event.mode) || (i.battle && i.battle.mode) || "",
@@ -84,6 +95,9 @@ module.exports = async (req, res) => {
       trophyChange: i.battle && i.battle.trophyChange,
       duration: i.battle && i.battle.duration,
       starPlayer: i.battle && i.battle.starPlayer ? i.battle.starPlayer.tag : null,
+      brawler: (mineOf(i) || {}).name || null,
+      teams: ((i.battle && i.battle.teams) || []).map((t) => t.map(slim)),
+      players: ((i.battle && i.battle.players) || []).map(slim),
     }));
 
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
