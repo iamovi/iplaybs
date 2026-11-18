@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iplaybs – Brawl Stars stats</title>
+<meta name="description" content="Look up Brawl Stars trophies, brawlers and recent battles by player tag.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#3b2a96; --ink:#1a0f3c; --card:#ffffff; --sun:#ffd23f; --win:#2ecc71; --loss:#ff4d5e; --draw:#b9b3d6; --soft:#ece9fb;
+  --display:"Lilita One","Arial Black",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;font-family:var(--body);font-weight:600;color:var(--ink);
+  background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.12) 1.5px,transparent 0) 0 0/22px 22px,var(--bg)}
+main{max-width:880px;margin:0 auto;padding:36px 16px 48px}
+h1{font:400 clamp(3rem,11vw,5.5rem)/1 var(--display);margin:0 0 6px;color:var(--sun);letter-spacing:.01em;
+  -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink)}
+.sub{margin:0 0 24px;color:#fff;font-weight:800;font-size:1.05rem}
+form{display:flex;gap:10px;flex-wrap:wrap}
+.field{flex:1 1 220px;display:flex;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:0 14px}
+.field span{font:400 1.5rem var(--display);color:#8b82c4}
+input{flex:1;min-width:0;border:0;outline:0;background:none;font:800 1.3rem var(--body);color:var(--ink);padding:14px 6px;text-transform:uppercase}
+.field:focus-within{outline:3px solid var(--sun);outline-offset:3px}
+button{font:400 1.4rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:12px 28px;cursor:pointer}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+button:disabled{opacity:.6;cursor:wait}
+.msg{margin:28px 0;padding:16px 18px;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink)}
+.msg.err{background:#ffe3e6}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:18px;margin-top:26px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.name{font:400 clamp(2rem,7vw,3rem)/1.05 var(--display);margin:0;overflow-wrap:anywhere}
+.meta{margin:4px 0 0;color:#6a60a8;font-weight:800}
+.trophy{font:400 clamp(2.4rem,9vw,3.6rem)/1 var(--display);background:var(--sun);border:3px solid var(--ink);border-radius:14px;padding:6px 16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
+.stat{background:var(--soft);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font:400 1.6rem var(--display)}
+.stat small{font-weight:800;color:#6a60a8}
+h2{font:400 1.7rem var(--display);margin:0 0 12px}
+.log{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-width:44px;padding:6px 10px;text-align:center;font:400 1rem var(--display);border:3px solid var(--ink);border-radius:10px;background:var(--draw)}
+.chip.victory{background:var(--win)} .chip.defeat{background:var(--loss);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.b{background:var(--soft);border:3px solid var(--ink);border-radius:14px;padding:8px;text-align:center}
+.b img{width:84px;height:84px;object-fit:contain;display:block;margin:0 auto 4px}
+.b strong{display:block;font:400 1.05rem var(--display);overflow-wrap:anywhere}
+.b span{font-weight:800;font-size:.9rem;color:#4b3f94}
+footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height:1.5}
+</style>
+</head>
+<body>
+<main>
+  <h1>iplaybs</h1>
+  <p class="sub">Look up any Brawl Stars player by tag.</p>
+  <form id="f" autocomplete="off">
+    <label class="field"><span>#</span><input id="tag" placeholder="2PP0L8" aria-label="Player tag" maxlength="15" autocapitalize="characters" spellcheck="false"></label>
+    <button id="go" type="submit">Search</button>
+  </form>
+  <div id="out" aria-live="polite"></div>
+  <footer>Your player tag is in the game under your profile, below your name. This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it.</footer>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const out = $("#out"), input = $("#tag"), btn = $("#go");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n || 0).toLocaleString();
+const pretty = s => String(s || "").replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase());
+const clean = v => v.trim().toUpperCase().replace(/^#/, "").replace(/O/g, "0");
+
+function msg(text, err) {
+  out.innerHTML = `<div class="msg${err ? " err" : ""}">${esc(text)}</div>`;
+}
+
+function render({ player: p, battles }) {
+  const stat = (v, l) => `<div class="stat"><b>${esc(v)}</b><small>${l}</small></div>`;
+  const chips = battles.map(b => {
+    const label = b.result ? b.result.slice(0, 1).toUpperCase() : (b.rank ? "#" + b.rank : "–");
+    const title = [pretty(b.mode), b.map, b.trophyChange ? (b.trophyChange > 0 ? "+" : "") + b.trophyChange + " trophies" : ""].filter(Boolean).join(", ");
+    return `<div class="chip ${esc(b.result || "")}" title="${esc(title)}">${esc(label)}</div>`;
+  }).join("");
+  const brawlers = [...p.brawlers].sort((a, b) => b.trophies - a.trophies).map(b => `
+    <div class="b">
+      <img src="https://cdn.brawlify.com/brawlers/borderless/${b.id}.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <strong>${esc(b.name)}</strong>
+      <span>${fmt(b.trophies)} trophies · Power ${b.power}</span>
+    </div>`).join("");
+
+  out.innerHTML = `
+    <section class="card">
+      <div class="head">
+        <div><h2 class="name">${esc(p.name)}</h2><p class="meta">${esc(p.tag)}${p.club ? " – " + esc(p.club) : ""}</p></div>
+        <div class="trophy">${fmt(p.trophies)}</div>
+      </div>
+      <div class="stats">
+        ${stat(fmt(p.highestTrophies), "Highest trophies")}
+        ${stat(p.expLevel, "Level")}
+        ${stat(fmt(p.v3), "3v3 wins")}
+        ${stat(fmt(p.solo), "Solo wins")}
+        ${stat(fmt(p.duo), "Duo wins")}
+        ${stat(p.brawlers.length, "Brawlers")}
+      </div>
+    </section>
+    ${battles.length ? `<section class="card"><h2>Recent battles</h2><div class="log">${chips}</div></section>` : ""}
+    <section class="card"><h2>Brawlers</h2><div class="grid">${brawlers}</div></section>`;
+
+}
+
+async function lookup(raw) {
+  const tag = clean(raw);
+  if (!tag) return msg("Enter a player tag to see stats.", true);
+  btn.disabled = true;
+  msg("Loading…");
+  try {
+    const r = await fetch("/api/player?tag=" + encodeURIComponent(tag));
+    const d = await r.json();
+    if (!r.ok) return msg(d.error || "Something went wrong. Try again.", true);
+    render(d);
+    history.replaceState(null, "", "?tag=" + tag);
+    try { localStorage.setItem("iplaybs:tag", tag); } catch (e) {}
+  } catch (e) {
+    msg("Couldn’t reach the server. Check your connection and try again.", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+$("#f").addEventListener("submit", e => { e.preventDefault(); lookup(input.value); });
+
+let start = new URLSearchParams(location.search).get("tag");
+if (!start) { try { start = localStorage.getItem("iplaybs:tag"); } catch (e) {} }
+if (start) { input.value = start; lookup(start); }
+</script>
+</body>
+</html>
