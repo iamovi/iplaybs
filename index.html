@@ -149,6 +149,20 @@ function head(p) {
     ? `<div class="club">${p.clubBadgeId ? `<img src="${badgeUrl(p.clubBadgeId)}" alt="" onerror="this.style.visibility='hidden'">` : ""}<span>${esc(p.club)}</span>${p.clubTag ? `<span class="tag">${esc(p.clubTag)}</span>` : ""}</div>`
     : "";
   const prog = pct(p.trophies, p.highestTrophies || p.trophies);
+  const tiles = [
+    [fmt(p.highestTrophies), "Highest trophies"],
+    [fmt(p.expLevel), "Level"],
+    [p.expPoints != null ? fmt(p.expPoints) : null, "Experience"],
+    [fmt(p.v3), "3v3 wins"],
+    [fmt(p.solo), "Solo wins"],
+    [fmt(p.duo), "Duo wins"],
+    [p.powerPlayPoints != null ? fmt(p.powerPlayPoints) : null, "Power Play points"],
+    [p.highestPowerPlayPoints != null ? fmt(p.highestPowerPlayPoints) : null, "Best Power Play"],
+    [p.bestRoboRumbleTime ? dur(p.bestRoboRumbleTime) : null, "Best Robo Rumble"],
+    [p.bestTimeAsBigBrawler ? dur(p.bestTimeAsBigBrawler) : null, "Best Big Brawler"],
+    [p.brawlers.length, "Brawlers"],
+  ].filter(t => t[0] != null && t[0] !== "");
+  const stats = tiles.map(t => `<div class="stat"><b>${t[0]}</b><small>${t[1]}</small></div>`).join("");
   return `
     <div class="head">
       ${icon}
@@ -156,6 +170,7 @@ function head(p) {
         <h2 class="name">${esc(p.name)}</h2>
         <p class="meta">${esc(p.tag)}</p>
         ${club}
+        ${p.championshipQualified ? `<div class="club"><span class="badge pw">Championship qualified</span></div>` : ""}
         <div class="rowbtns">
           <button class="alt" type="button" id="copytag">Copy tag</button>
           <button class="alt" type="button" id="copylink">Copy link</button>
@@ -163,14 +178,7 @@ function head(p) {
       </div>
       <div class="trophy">${fmt(p.trophies)}</div>
     </div>
-    <div class="stats">
-      <div class="stat"><b>${fmt(p.highestTrophies)}</b><small>Highest trophies</small></div>
-      <div class="stat"><b>${esc(p.expLevel)}</b><small>Level</small></div>
-      <div class="stat"><b>${fmt(p.v3)}</b><small>3v3 wins</small></div>
-      <div class="stat"><b>${fmt(p.solo)}</b><small>Solo wins</small></div>
-      <div class="stat"><b>${fmt(p.duo)}</b><small>Duo wins</small></div>
-      <div class="stat"><b>${p.brawlers.length}</b><small>Brawlers</small></div>
-    </div>
+    <div class="stats">${stats}</div>
     <p class="meta" style="margin-top:16px">${prog}% of peak (${fmt(p.highestTrophies)})</p>
     <div class="bar"><i style="width:${prog}%"></i></div>`;
 }
@@ -237,6 +245,11 @@ function renderBrawlers() {
         <span class="badge">Rank ${b.rank}</span>
       </div>
       <span>${fmt(b.trophies)} trophies</span>
+      ${(b.starPowers || b.gadgets || b.gears) ? `<div class="badges" style="margin-top:6px">
+        ${b.starPowers ? `<span class="badge" title="Star powers">★ ${b.starPowers}</span>` : ""}
+        ${b.gadgets ? `<span class="badge" title="Gadgets">◆ ${b.gadgets}</span>` : ""}
+        ${b.gears ? `<span class="badge" title="Gears">⚙ ${b.gears}</span>` : ""}
+      </div>` : ""}
     </div>`).join("") : `<div class="empty">No brawlers match "${esc(q)}".</div>`;
 }
 

@@ -28,26 +28,49 @@ module.exports = async (req, res) => {
     const p = await pr.json();
     const log = br.ok ? await br.json() : { items: [] };
 
+    // The player object has no club badge; it lives on the club resource.
+    let clubBadgeId = null;
+    if (p.club && p.club.tag) {
+      try {
+        const clubTag = String(p.club.tag).replace(/^#/, "");
+        const cr = await fetch(`${BASE}/clubs/%23${clubTag}`, { headers });
+        if (cr.ok) {
+          const c = await cr.json();
+          clubBadgeId = c.badgeId != null ? c.badgeId : null;
+        }
+      } catch (e) {}
+    }
+
     const club = p.club
-      ? { name: p.club.name, tag: p.club.tag, badgeId: p.club.badgeId }
+      ? { name: p.club.name, tag: p.club.tag, badgeId: clubBadgeId }
       : null;
 
     const player = {
       name: p.name,
       tag: p.tag,
       iconId: p.icon && p.icon.id ? p.icon.id : null,
+      nameColor: p.nameColor || null,
       trophies: p.trophies,
       highestTrophies: p.highestTrophies,
       expLevel: p.expLevel,
+      expPoints: p.expPoints,
       v3: p["3vs3Victories"],
       solo: p.soloVictories,
       duo: p.duoVictories,
+      powerPlayPoints: p.powerPlayPoints,
+      highestPowerPlayPoints: p.highestPowerPlayPoints,
+      bestRoboRumbleTime: p.bestRoboRumbleTime,
+      bestTimeAsBigBrawler: p.bestTimeAsBigBrawler,
+      championshipQualified: !!p.isQualifiedFromChampionshipChallenge,
       club: club ? club.name : null,
       clubBadgeId: club ? club.badgeId : null,
       clubTag: club ? club.tag : null,
       brawlers: (p.brawlers || []).map((b) => ({
         id: b.id, name: b.name, power: b.power, rank: b.rank,
         trophies: b.trophies, highestTrophies: b.highestTrophies,
+        starPowers: (b.starPowers || []).length,
+        gadgets: (b.gadgets || []).length,
+        gears: (b.gears || []).length,
       })),
     };
 
