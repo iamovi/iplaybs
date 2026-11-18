@@ -22,35 +22,64 @@ h1{font:400 clamp(3rem,11vw,5.5rem)/1 var(--display);margin:0 0 6px;color:var(--
   -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink)}
 .sub{margin:0 0 24px;color:#fff;font-weight:800;font-size:1.05rem}
 form{display:flex;gap:10px;flex-wrap:wrap}
-.field{flex:1 1 220px;display:flex;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:0 14px}
+.field{flex:1 1 220px;display:flex;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink);padding:0 14px}
 .field span{font:400 1.5rem var(--display);color:#8b82c4}
 input{flex:1;min-width:0;border:0;outline:0;background:none;font:800 1.3rem var(--body);color:var(--ink);padding:14px 6px;text-transform:uppercase}
 .field:focus-within{outline:3px solid var(--sun);outline-offset:3px}
-button{font:400 1.4rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:12px 28px;cursor:pointer}
+button{font:400 1.4rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink);padding:12px 28px;cursor:pointer}
 button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
 button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 button:disabled{opacity:.6;cursor:wait}
-.msg{margin:28px 0;padding:16px 18px;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink)}
+.msg{margin:28px 0;padding:16px 18px;background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink)}
 .msg.err{background:#ffe3e6}
-.card{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:18px;margin-top:26px}
-.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 6px 0 var(--ink);padding:18px;margin-top:26px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .name{font:400 clamp(2rem,7vw,3rem)/1.05 var(--display);margin:0;overflow-wrap:anywhere}
 .meta{margin:4px 0 0;color:#6a60a8;font-weight:800}
-.trophy{font:400 clamp(2.4rem,9vw,3.6rem)/1 var(--display);background:var(--sun);border:3px solid var(--ink);border-radius:14px;padding:6px 16px}
+.trophy{font:400 clamp(2.4rem,9vw,3.6rem)/1 var(--display);background:var(--sun);border:3px solid var(--ink);border-radius:0;padding:6px 16px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
-.stat{background:var(--soft);border-radius:12px;padding:10px 12px}
+.stat{background:var(--soft);border-radius:0;padding:10px 12px}
 .stat b{display:block;font:400 1.6rem var(--display)}
 .stat small{font-weight:800;color:#6a60a8}
 h2{font:400 1.7rem var(--display);margin:0 0 12px}
-.log{display:flex;gap:8px;flex-wrap:wrap}
-.chip{min-width:44px;padding:6px 10px;text-align:center;font:400 1rem var(--display);border:3px solid var(--ink);border-radius:10px;background:var(--draw)}
+.log{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.chip{display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:58px;padding:6px 8px;text-align:center;font:400 1rem var(--display);border:3px solid var(--ink);border-radius:0;background:var(--draw)}
 .chip.victory{background:var(--win)} .chip.defeat{background:var(--loss);color:#fff}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
-.b{background:var(--soft);border:3px solid var(--ink);border-radius:14px;padding:8px;text-align:center}
+.b{background:var(--soft);border:3px solid var(--ink);border-radius:0;padding:8px;text-align:center}
 .b img{width:84px;height:84px;object-fit:contain;display:block;margin:0 auto 4px}
 .b strong{display:block;font:400 1.05rem var(--display);overflow-wrap:anywhere}
 .b span{font-weight:800;font-size:.9rem;color:#4b3f94}
 footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height:1.5}
+/* --- additions (same design language) --- */
+.hero-icon{width:84px;height:84px;flex:0 0 auto;border:3px solid var(--ink);border-radius:0;background:var(--soft);object-fit:contain}
+.head .who{flex:1 1 200px;min-width:0}
+.club{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-weight:800;color:#6a60a8}
+.club img{width:26px;height:26px;border:3px solid var(--ink);border-radius:0;background:var(--soft)}
+.club .tag{font-family:var(--display);color:#4b3f94}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rowbtns button{font:400 1rem var(--display);padding:6px 14px;box-shadow:0 3px 0 var(--ink);border-radius:0}
+.rowbtns button.alt{background:var(--soft)}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.summary .stat{text-align:center}
+.bar{height:16px;border:3px solid var(--ink);border-radius:0;background:var(--soft);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:var(--win)}
+.chip .d{font:800 .72rem var(--body);opacity:.85}
+.chip .t{font:600 .62rem var(--body);opacity:.7}
+.chip.up .d{color:#0a6b39} .chip.down .d{color:#a3142a}
+.chip.victory .d,.chip.victory .t,.chip.defeat .d,.chip.defeat .t{color:inherit}
+.recent{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.recent .chip{background:var(--card);color:var(--ink);cursor:pointer;border-radius:0;min-width:0;padding:6px 12px}
+.recent .chip:hover{background:var(--soft)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tools .field{flex:1 1 200px;box-shadow:none;border-radius:0;border-width:2px}
+.tools .field input{font-size:1rem;padding:10px 4px;text-transform:none}
+.tools select{font:400 1rem var(--display);color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:0;padding:10px 12px;cursor:pointer}
+.badges{display:flex;gap:6px;justify-content:center;margin-bottom:6px}
+.badge{font:400 .7rem var(--display);padding:2px 8px;border:2px solid var(--ink);border-radius:0;background:var(--soft);color:#4b3f94}
+.badge.pw{background:var(--sun);color:var(--ink)}
+.empty{background:var(--soft);border-radius:0;padding:14px;text-align:center;font-weight:800;color:#6a60a8}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;margin:0;background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink);padding:10px 18px;font:400 1.1rem var(--display)}
 </style>
 </head>
 <body>
@@ -61,58 +90,192 @@ footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height
     <label class="field"><span>#</span><input id="tag" placeholder="2PP0L8" aria-label="Player tag" maxlength="15" autocapitalize="characters" spellcheck="false"></label>
     <button id="go" type="submit">Search</button>
   </form>
+  <div class="recent" id="recent"></div>
   <div id="out" aria-live="polite"></div>
   <footer>Your player tag is in the game under your profile, below your name. This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it.</footer>
 </main>
 <script>
 const $ = s => document.querySelector(s);
-const out = $("#out"), input = $("#tag"), btn = $("#go");
+const out = $("#out"), input = $("#tag"), btn = $("#go"), recent = $("#recent");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt = n => Number(n || 0).toLocaleString();
 const pretty = s => String(s || "").replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase());
 const clean = v => v.trim().toUpperCase().replace(/^#/, "").replace(/O/g, "0");
+const pct = (a, b) => b > 0 ? Math.max(0, Math.min(100, Math.round(a / b * 100))) : 0;
+const iconUrl = id => `https://cdn.brawlify.com/profile-icons/regular/${id}.png`;
+const badgeUrl = id => `https://cdn.brawlify.com/club-badges/regular/${id}.png`;
+const brawlerUrl = id => `https://cdn.brawlify.com/brawlers/borderless/${id}.png`;
+
+function ago(iso) {
+  if (!iso) return "";
+  const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(?:\.(\d{1,3}))?Z?$/.exec(String(iso));
+  const t = m
+    ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6], +(m[7] || 0).toString().padEnd(3, "0"))
+    : Date.parse(iso);
+  if (isNaN(t)) return "";
+  const m2 = (Date.now() - t) / 60000;
+  if (m2 < 1) return "now";
+  if (m2 < 60) return Math.floor(m2) + "m ago";
+  if (m2 < 1440) return Math.floor(m2 / 60) + "h ago";
+  return Math.floor(m2 / 1440) + "d ago";
+}
+function dur(sec) {
+  if (!sec) return "";
+  return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
+}
 
 function msg(text, err) {
   out.innerHTML = `<div class="msg${err ? " err" : ""}">${esc(text)}</div>`;
 }
 
-function render({ player: p, battles }) {
-  const stat = (v, l) => `<div class="stat"><b>${esc(v)}</b><small>${l}</small></div>`;
+function renderRecent() {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem("iplaybs:recent") || "[]"); } catch (e) {}
+  recent.innerHTML = list.map(t => `<button class="chip" type="button" data-tag="${esc(t)}">#${esc(t)}</button>`).join("");
+}
+function pushRecent(tag) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem("iplaybs:recent") || "[]"); } catch (e) {}
+  list = [tag, ...list.filter(t => t !== tag)].slice(0, 6);
+  try { localStorage.setItem("iplaybs:recent", JSON.stringify(list)); } catch (e) {}
+  renderRecent();
+}
+
+function head(p) {
+  const icon = p.iconId
+    ? `<img class="hero-icon" src="${iconUrl(p.iconId)}" alt="" onerror="this.style.visibility='hidden'">`
+    : `<div class="hero-icon"></div>`;
+  const club = p.club
+    ? `<div class="club">${p.clubBadgeId ? `<img src="${badgeUrl(p.clubBadgeId)}" alt="" onerror="this.style.visibility='hidden'">` : ""}<span>${esc(p.club)}</span>${p.clubTag ? `<span class="tag">${esc(p.clubTag)}</span>` : ""}</div>`
+    : "";
+  const prog = pct(p.trophies, p.highestTrophies || p.trophies);
+  return `
+    <div class="head">
+      ${icon}
+      <div class="who">
+        <h2 class="name">${esc(p.name)}</h2>
+        <p class="meta">${esc(p.tag)}</p>
+        ${club}
+        <div class="rowbtns">
+          <button class="alt" type="button" id="copytag">Copy tag</button>
+          <button class="alt" type="button" id="copylink">Copy link</button>
+        </div>
+      </div>
+      <div class="trophy">${fmt(p.trophies)}</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>${fmt(p.highestTrophies)}</b><small>Highest trophies</small></div>
+      <div class="stat"><b>${esc(p.expLevel)}</b><small>Level</small></div>
+      <div class="stat"><b>${fmt(p.v3)}</b><small>3v3 wins</small></div>
+      <div class="stat"><b>${fmt(p.solo)}</b><small>Solo wins</small></div>
+      <div class="stat"><b>${fmt(p.duo)}</b><small>Duo wins</small></div>
+      <div class="stat"><b>${p.brawlers.length}</b><small>Brawlers</small></div>
+    </div>
+    <p class="meta" style="margin-top:16px">${prog}% of peak (${fmt(p.highestTrophies)})</p>
+    <div class="bar"><i style="width:${prog}%"></i></div>`;
+}
+
+function battlesCard(battles) {
+  if (!battles.length) return "";
+  let w = 0, l = 0;
+  battles.forEach(b => { if (b.result === "victory") w++; else if (b.result === "defeat") l++; });
+  const decided = w + l;
+  const rate = decided ? Math.round(w / decided * 100) : 0;
   const chips = battles.map(b => {
     const label = b.result ? b.result.slice(0, 1).toUpperCase() : (b.rank ? "#" + b.rank : "–");
-    const title = [pretty(b.mode), b.map, b.trophyChange ? (b.trophyChange > 0 ? "+" : "") + b.trophyChange + " trophies" : ""].filter(Boolean).join(", ");
-    return `<div class="chip ${esc(b.result || "")}" title="${esc(title)}">${esc(label)}</div>`;
+    const change = b.trophyChange != null && b.trophyChange !== 0 ? (b.trophyChange > 0 ? "+" : "") + b.trophyChange : "";
+    const sub = [pretty(b.mode), dur(b.duration)].filter(Boolean).join(" · ");
+    const cls = `${b.result || ""} ${b.trophyChange > 0 ? "up" : b.trophyChange < 0 ? "down" : ""}`;
+    const title = [pretty(b.mode), b.map, b.type ? pretty(b.type) : "", change ? change + " trophies" : "", ago(b.time)].filter(Boolean).join(", ");
+    return `<div class="chip ${esc(cls)}" title="${esc(title)}">
+      <span class="d">${esc(label)}</span>
+      <span class="t">${esc(change || sub || "")}</span>
+    </div>`;
   }).join("");
-  const brawlers = [...p.brawlers].sort((a, b) => b.trophies - a.trophies).map(b => `
+  return `<section class="card">
+    <h2>Recent battles</h2>
+    <div class="summary">
+      <div class="stat"><b style="color:#1f9d55">${w}</b><small>Wins</small></div>
+      <div class="stat"><b style="color:#d23c4c">${l}</b><small>Losses</small></div>
+      <div class="stat"><b>${rate}%</b><small>Win rate</small></div>
+    </div>
+    <div class="bar"><i style="width:${rate}%"></i></div>
+    <div class="log">${chips}</div>
+  </section>`;
+}
+
+function brawlersCard(brawlers) {
+  if (!brawlers.length) return "";
+  return `<section class="card">
+    <h2>Brawlers</h2>
+    <div class="tools">
+      <label class="field"><input id="bsearch" placeholder="Filter by name" aria-label="Filter brawlers" spellcheck="false"></label>
+      <select id="bsort" aria-label="Sort brawlers">
+        <option value="trophies">Trophies</option>
+        <option value="power">Power</option>
+        <option value="rank">Rank</option>
+        <option value="name">Name</option>
+      </select>
+    </div>
+    <div class="grid" id="bgrid"></div>
+  </section>`;
+}
+
+function renderBrawlers() {
+  const grid = $("#bgrid");
+  if (!grid || !STATE) return;
+  const q = ($("#bsearch").value || "").trim().toLowerCase();
+  const sort = $("#bsort").value;
+  const list = STATE.player.brawlers.filter(b => !q || b.name.toLowerCase().includes(q));
+  list.sort((a, b) => sort === "name" ? a.name.localeCompare(b.name) : (Number(b[sort] || 0) - Number(a[sort] || 0)));
+  grid.innerHTML = list.length ? list.map(b => `
     <div class="b">
-      <img src="https://cdn.brawlify.com/brawlers/borderless/${b.id}.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <img src="${brawlerUrl(b.id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
       <strong>${esc(b.name)}</strong>
-      <span>${fmt(b.trophies)} trophies · Power ${b.power}</span>
-    </div>`).join("");
-
-  out.innerHTML = `
-    <section class="card">
-      <div class="head">
-        <div><h2 class="name">${esc(p.name)}</h2><p class="meta">${esc(p.tag)}${p.club ? " – " + esc(p.club) : ""}</p></div>
-        <div class="trophy">${fmt(p.trophies)}</div>
+      <div class="badges">
+        <span class="badge pw">Power ${b.power}</span>
+        <span class="badge">Rank ${b.rank}</span>
       </div>
-      <div class="stats">
-        ${stat(fmt(p.highestTrophies), "Highest trophies")}
-        ${stat(p.expLevel, "Level")}
-        ${stat(fmt(p.v3), "3v3 wins")}
-        ${stat(fmt(p.solo), "Solo wins")}
-        ${stat(fmt(p.duo), "Duo wins")}
-        ${stat(p.brawlers.length, "Brawlers")}
-      </div>
-    </section>
-    ${battles.length ? `<section class="card"><h2>Recent battles</h2><div class="log">${chips}</div></section>` : ""}
-    <section class="card"><h2>Brawlers</h2><div class="grid">${brawlers}</div></section>`;
+      <span>${fmt(b.trophies)} trophies</span>
+    </div>`).join("") : `<div class="empty">No brawlers match "${esc(q)}".</div>`;
+}
 
+let STATE = null;
+
+function render(data) {
+  STATE = data;
+  const p = data.player;
+  out.innerHTML = `<section class="card">${head(p)}</section>`
+    + battlesCard(data.battles || [])
+    + brawlersCard(p.brawlers || []);
+  $("#copytag").addEventListener("click", () => copy(p.tag, "Tag copied"));
+  $("#copylink").addEventListener("click", () => copy(location.origin + "/?tag=" + encodeURIComponent(p.tag.replace(/^#/, "")), "Link copied"));
+  const s = $("#bsearch"), so = $("#bsort");
+  if (s) s.addEventListener("input", renderBrawlers);
+  if (so) so.addEventListener("change", renderBrawlers);
+  renderBrawlers();
+}
+
+function toast(text) {
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1600);
+}
+
+function copy(text, note) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => toast(note)).catch(() => toast("Copy failed"));
+  } else {
+    toast("Copy unavailable");
+  }
 }
 
 async function lookup(raw) {
   const tag = clean(raw);
   if (!tag) return msg("Enter a player tag to see stats.", true);
+  input.value = tag;
   btn.disabled = true;
   msg("Loading…");
   try {
@@ -120,6 +283,7 @@ async function lookup(raw) {
     const d = await r.json();
     if (!r.ok) return msg(d.error || "Something went wrong. Try again.", true);
     render(d);
+    pushRecent(tag);
     history.replaceState(null, "", "?tag=" + tag);
     try { localStorage.setItem("iplaybs:tag", tag); } catch (e) {}
   } catch (e) {
@@ -130,7 +294,12 @@ async function lookup(raw) {
 }
 
 $("#f").addEventListener("submit", e => { e.preventDefault(); lookup(input.value); });
+recent.addEventListener("click", e => {
+  const c = e.target.closest("[data-tag]");
+  if (c) lookup(c.dataset.tag);
+});
 
+renderRecent();
 let start = new URLSearchParams(location.search).get("tag");
 if (!start) { try { start = localStorage.getItem("iplaybs:tag"); } catch (e) {} }
 if (start) { input.value = start; lookup(start); }
