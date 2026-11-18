@@ -80,6 +80,19 @@ footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height
 .badge.pw{background:var(--sun);color:var(--ink)}
 .empty{background:var(--soft);border-radius:0;padding:14px;text-align:center;font-weight:800;color:#6a60a8}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;margin:0;background:var(--card);border:3px solid var(--ink);border-radius:0;box-shadow:0 5px 0 var(--ink);padding:10px 18px;font:400 1.1rem var(--display)}
+#tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+#tabs button{font-size:1rem;padding:6px 14px;box-shadow:0 3px 0 var(--ink);background:var(--soft)}
+#tabs button.on{background:var(--sun)}
+[hidden]{display:none!important}
+.row{display:flex;align-items:center;gap:10px;width:100%;padding:6px 4px;border:0;border-bottom:2px solid var(--soft);background:none;box-shadow:none;font:800 1rem var(--body);color:var(--ink);text-align:left;cursor:pointer}
+div.row{cursor:default}
+.row:active{transform:none;box-shadow:none}.row:hover{background:var(--soft)}
+.row b{font:400 1rem var(--display);min-width:64px}.row img{width:32px;height:32px;border:2px solid var(--ink);background:var(--soft)}
+.row span{flex:1;min-width:0;overflow-wrap:anywhere}.row em{font:400 1rem var(--display);font-style:normal}
+.blist details,.clist details{border-bottom:2px solid var(--soft);padding:6px 0}
+.blist summary,.clist summary{cursor:pointer;font-weight:800}
+.clist summary img{width:32px;height:32px;vertical-align:middle;margin-right:8px}
+.card svg{display:block;background:var(--soft);border:3px solid var(--ink)}
 </style>
 </head>
 <body>
@@ -91,7 +104,9 @@ footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height
     <button id="go" type="submit">Search</button>
   </form>
   <div class="recent" id="recent"></div>
+  <nav id="tabs"><button type="button" data-v="player" class="on">Player</button><button type="button" data-v="club">Club</button><button type="button" data-v="rankings">Rankings</button><button type="button" data-v="events">Events</button><button type="button" data-v="catalog">Brawlers</button></nav>
   <div id="out" aria-live="polite"></div>
+  <div id="out2" aria-live="polite" hidden></div>
   <footer>Your player tag is in the game under your profile, below your name. This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it.</footer>
 </main>
 <script>
@@ -209,6 +224,7 @@ function battlesCard(battles) {
     </div>
     <div class="bar"><i style="width:${rate}%"></i></div>
     <div class="log">${chips}</div>
+    ${battleList(battles)}
   </section>`;
 }
 
@@ -245,10 +261,11 @@ function renderBrawlers() {
         <span class="badge">Rank ${b.rank}</span>
       </div>
       <span>${fmt(b.trophies)} trophies</span>
-      ${(b.starPowers || b.gadgets || b.gears) ? `<div class="badges" style="margin-top:6px">
-        ${b.starPowers ? `<span class="badge" title="Star powers">★ ${b.starPowers}</span>` : ""}
-        ${b.gadgets ? `<span class="badge" title="Gadgets">◆ ${b.gadgets}</span>` : ""}
-        ${b.gears ? `<span class="badge" title="Gears">⚙ ${b.gears}</span>` : ""}
+      ${(b.starPowers || b.gadgets || b.gears || b.hyperCharges) ? `<div class="badges" style="margin-top:6px">
+        ${b.starPowers ? `<span class="badge" title="${esc((b.starPowerNames || []).join(", ") || "Star powers")}">★ ${b.starPowers}</span>` : ""}
+        ${b.gadgets ? `<span class="badge" title="${esc((b.gadgetNames || []).join(", ") || "Gadgets")}">◆ ${b.gadgets}</span>` : ""}
+        ${b.gears ? `<span class="badge" title="${esc((b.gearNames || []).join(", ") || "Gears")}">⚙ ${b.gears}</span>` : ""}
+        ${b.hyperCharges ? `<span class="badge" title="${esc((b.hyperChargeNames || []).join(", ") || "Hypercharges")}">⚡ ${b.hyperCharges}</span>` : ""}
       </div>` : ""}
     </div>`).join("") : `<div class="empty">No brawlers match "${esc(q)}".</div>`;
 }
@@ -259,7 +276,7 @@ function render(data) {
   STATE = data;
   const p = data.player;
   out.innerHTML = `<section class="card">${head(p)}</section>`
-    + battlesCard(data.battles || [])
+    + charts(p, data.battles || []) + battlesCard(data.battles || [])
     + brawlersCard(p.brawlers || []);
   $("#copytag").addEventListener("click", () => copy(p.tag, "Tag copied"));
   $("#copylink").addEventListener("click", () => copy(location.origin + "/?tag=" + encodeURIComponent(p.tag.replace(/^#/, "")), "Link copied"));
@@ -289,6 +306,7 @@ async function lookup(raw) {
   const tag = clean(raw);
   if (!tag) return msg("Enter a player tag to see stats.", true);
   input.value = tag;
+  show("player");
   btn.disabled = true;
   msg("Loading…");
   try {
@@ -310,6 +328,100 @@ $("#f").addEventListener("submit", e => { e.preventDefault(); lookup(input.value
 recent.addEventListener("click", e => {
   const c = e.target.closest("[data-tag]");
   if (c) lookup(c.dataset.tag);
+});
+
+/* ---- extras: charts, battle details, club, rankings, events, catalog ---- */
+const enc = encodeURIComponent, out2 = $("#out2");
+const api = async q => { const r = await fetch("/api/bs?" + q); const d = await r.json(); if (!r.ok) throw new Error(d.error || "Request failed"); return d; };
+const card = (t, b) => `<section class="card"><h2>${t}</h2>${b}</section>`;
+const empty = t => `<div class="empty">${esc(t)}</div>`;
+const when = iso => { const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/.exec(iso || ""); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : NaN; };
+const span = ms => { const s = Math.max(0, Math.floor(ms / 1000)), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60); return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`; };
+const img = (u, c) => `<img${c ? ` class="${c}"` : ""} src="${u}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`;
+
+function chart(pts, title, note) {
+  if (pts.length < 2) return "";
+  const W = 800, H = 240, P = 40, vs = pts.map(p => p.v), mn = Math.min(...vs), mx = Math.max(...vs), r = (mx - mn) || 1;
+  const x = i => P + i * (W - 2 * P) / (pts.length - 1), y = v => H - P - (v - mn) / r * (H - 2 * P);
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(p.v).toFixed(1)}`).join("");
+  const dots = pts.map((p, i) => `<circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="5" fill="${p.c || "#ffd23f"}" stroke="#1a0f3c" stroke-width="2"><title>${esc(p.t)}</title></circle>`).join("");
+  return card(title, `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}"><path d="${line}" fill="none" stroke="#1a0f3c" stroke-width="3"/>${dots}<text x="4" y="${y(mx) - 8}" font-size="14" font-weight="800">${fmt(mx)}</text><text x="4" y="${y(mn) + 18}" font-size="14" font-weight="800">${fmt(mn)}</text></svg><p class="meta">${note}</p>`);
+}
+function snap(p) {
+  const k = "iplaybs:hist:" + p.tag; let a = [];
+  try { a = JSON.parse(localStorage.getItem(k) || "[]"); } catch (e) {}
+  const l = a[a.length - 1];
+  if (!l || l[1] !== p.trophies || Date.now() - l[0] > 36e5) a.push([Date.now(), p.trophies]);
+  a = a.slice(-200);
+  try { localStorage.setItem(k, JSON.stringify(a)); } catch (e) {}
+  return a;
+}
+function charts(p, bs) {
+  let v = p.trophies; const a = [];
+  bs.filter(b => b.trophyChange).forEach(b => { a.push({ v, c: b.trophyChange > 0 ? "#2ecc71" : "#ff4d5e", t: `${pretty(b.mode)} ${b.trophyChange > 0 ? "+" : ""}${b.trophyChange} → ${fmt(v)} (${ago(b.time)})` }); v -= b.trophyChange; });
+  a.push({ v, t: "Before: " + fmt(v) });
+  const h = snap(p).map(x => ({ v: x[1], t: new Date(x[0]).toLocaleString() + ": " + fmt(x[1]) }));
+  return chart(a.reverse(), "Trophy graph (recent battles)", "Rebuilt from the trophy changes in your battle log. Green = gain, red = loss. Tap a dot for details.")
+    + chart(h, "Trophy history (your visits)", "Saved in this browser each time this player is looked up, so it grows over time.");
+}
+function battleList(bs) {
+  const nm = x => `${esc(x.name)} (${esc(x.brawler)})`;
+  return `<div class="blist" style="margin-top:14px">${bs.map(b => {
+    const r = b.result || (b.rank ? "#" + b.rank : "–"), c = b.trophyChange ? (b.trophyChange > 0 ? "+" : "") + b.trophyChange : "";
+    const t = (b.teams || []).map(tm => tm.map(nm).join(", ")).concat((b.players || []).length ? [b.players.map(nm).join(", ")] : []).join(" <b>vs</b> ");
+    return `<details><summary>${esc([pretty(b.mode), b.map, b.brawler, r + (c ? " " + c : ""), ago(b.time)].filter(Boolean).join(" · "))}</summary><p class="meta">${esc(pretty(b.type))} ${dur(b.duration)}</p><p>${t}</p></details>`;
+  }).join("")}</div>`;
+}
+
+const VIEWS = {
+  async club() {
+    const t = STATE && STATE.player.clubTag;
+    if (!t) return card("Club", empty("Search a player who is in a club first."));
+    const id = enc(t.replace(/^#/, ""));
+    const [c, m] = await Promise.all([api("r=club&tag=" + id), api("r=members&tag=" + id)]);
+    const st = (b, s) => `<div class="stat"><b>${b}</b><small>${s}</small></div>`;
+    const rows = (m.items || []).map(x => `<button type="button" class="row" data-look="${esc(x.tag)}"><b>${esc(pretty(x.role))}</b>${img(iconUrl(x.icon && x.icon.id))}<span>${esc(x.name)}</span><em>${fmt(x.trophies)}</em></button>`).join("");
+    return card(esc(c.name), `<div class="club">${img(badgeUrl(c.badgeId))}<span class="tag">${esc(c.tag)}</span></div><p>${esc(c.description || "")}</p><div class="stats">${st(fmt(c.trophies), "Trophies")}${st(fmt(c.requiredTrophies), "Required")}${st((c.members || []).length + "/30", "Members")}${st(esc(pretty(c.type)), "Type")}</div>`)
+      + card("Members", rows || empty("No members."));
+  },
+  async rankings() {
+    const bl = (await api("r=brawlers")).items || [];
+    return card("Rankings (top 200)", `<div class="tools"><select id="rk" aria-label="Ranking type"><option value="players">Players</option><option value="clubs">Clubs</option><option value="brawlers">Brawler</option></select><select id="rb" aria-label="Brawler">${bl.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join("")}</select><label class="field"><input id="rc" value="global" aria-label="2-letter country code or global" maxlength="6"></label><button type="button" id="rgo">Load</button></div><div id="rres">${empty("Pick a type and country, then Load. Brawler picks the brawler list.")}</div>`);
+  },
+  async events() {
+    const e = await api("r=events"), now = Date.now();
+    return card("Event rotation", (e || []).map(x => {
+      const s = when(x.startTime), f = when(x.endTime), live = s <= now;
+      return `<div class="row"><b>${esc(pretty(x.event && x.event.mode))}</b><span>${esc(x.event && x.event.map)}</span><em>${live ? "ends in " + span(f - now) : "starts in " + span(s - now)}</em></div>`;
+    }).join("") || empty("No events right now."));
+  },
+  async catalog() {
+    const bl = (await api("r=brawlers")).items || [], own = new Set(STATE ? STATE.player.brawlers.map(b => b.id) : []);
+    const nm = a => (a || []).map(x => esc(x.name)).join(", ") || "–";
+    return card(`All brawlers (${bl.length})`, `<div class="clist">${bl.map(b => `<details><summary>${img(brawlerUrl(b.id))}${esc(b.name)}${STATE && !own.has(b.id) ? ' <span class="badge">Not owned</span>' : ""}</summary><p><b>Star powers:</b> ${nm(b.starPowers)}</p><p><b>Gadgets:</b> ${nm(b.gadgets)}</p><p><b>Hypercharges:</b> ${nm(b.hyperCharges)}</p><p><b>Gears:</b> ${nm(b.gears)}</p></details>`).join("")}</div>`);
+  },
+};
+
+async function show(v) {
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  out.hidden = v !== "player"; out2.hidden = v === "player";
+  if (v === "player") return;
+  out2.innerHTML = '<div class="msg">Loading…</div>';
+  try { out2.innerHTML = await VIEWS[v](); } catch (e) { out2.innerHTML = `<div class="msg err">${esc(e.message)}</div>`; }
+}
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) show(b.dataset.v); });
+out2.addEventListener("click", async e => {
+  const l = e.target.closest("[data-look]");
+  if (l) { show("player"); return lookup(l.dataset.look); }
+  if (e.target.id !== "rgo") return;
+  const k = $("#rk").value, cc = $("#rc").value.trim().toLowerCase() || "global", res = $("#rres");
+  res.innerHTML = empty("Loading…");
+  try {
+    const d = await api(`r=rank&kind=${k}&cc=${enc(cc)}&id=${$("#rb").value}`);
+    res.innerHTML = (d.items || []).map(x => k === "clubs"
+      ? `<div class="row"><b>#${x.rank}</b>${img(badgeUrl(x.badgeId))}<span>${esc(x.name)}</span><em>${fmt(x.trophies)} · ${x.memberCount}/30</em></div>`
+      : `<button type="button" class="row" data-look="${esc(x.tag)}"><b>#${x.rank}</b>${img(iconUrl(x.icon && x.icon.id))}<span>${esc(x.name)}${x.club ? " · " + esc(x.club.name) : ""}</span><em>${fmt(x.trophies)}</em></button>`).join("") || empty("No results.");
+  } catch (er) { res.innerHTML = `<div class="msg err">${esc(er.message)}</div>`; }
 });
 
 renderRecent();
