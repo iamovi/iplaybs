@@ -3,413 +3,136 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b0e18">
-<title>iplaybs – Brawl Stars player stats</title>
-<meta name="description" content="Look up Brawl Stars trophies, brawlers, clubs and recent battles by player tag.">
+<title>iplaybs – Brawl Stars stats</title>
+<meta name="description" content="Look up Brawl Stars trophies, brawlers and recent battles by player tag.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0e18; --panel:#161c30; --panel2:#1d2440; --line:#2b3457;
-  --ink:#eef1ff; --muted:#8f9bc4; --accent:#ffd23f; --accent2:#5cc8ff;
-  --win:#39d98a; --loss:#ff5c72; --draw:#9aa4c9;
-  --display:"Chakra Petch",system-ui,sans-serif; --body:"Space Grotesk",system-ui,sans-serif;
+  --bg:#3b2a96; --ink:#1a0f3c; --card:#ffffff; --sun:#ffd23f; --win:#2ecc71; --loss:#ff4d5e; --draw:#b9b3d6; --soft:#ece9fb;
+  --display:"Lilita One","Arial Black",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif;
 }
-*{box-sizing:border-box;border-radius:1px}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;min-height:100vh;font-family:var(--body);color:var(--ink);background:var(--bg);
-  background-image:
-    linear-gradient(rgba(43,52,87,.35) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(43,52,87,.35) 1px,transparent 1px);
-  background-size:44px 44px,44px 44px;
-  background-position:-1px -1px;
-}
-a{color:var(--accent2)}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-
-header{position:sticky;top:0;z-index:20;background:rgba(11,14,24,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-header .wrap{padding-top:12px;padding-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:700;letter-spacing:.04em}
-.brand .mark{font-size:1.5rem;color:var(--accent);text-shadow:0 0 14px rgba(255,210,63,.35)}
-.brand .sub{font-size:.72rem;color:var(--muted);font-weight:600;letter-spacing:.12em;text-transform:uppercase}
-
-.search{display:flex;gap:8px;flex:1 1 320px;min-width:240px}
-.field{flex:1;display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);padding:0 10px}
-.field:focus-within{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.field .hash{font-family:var(--display);font-weight:700;color:var(--muted)}
-input,select,button{font-family:inherit;font-size:1rem;color:var(--ink)}
-.field input{flex:1;min-width:0;border:0;outline:0;background:none;padding:11px 2px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.field input::placeholder{color:#5c678f;text-transform:none;letter-spacing:0}
-button{background:var(--accent);color:#12141f;border:1px solid #b8912a;padding:11px 18px;font-family:var(--display);font-weight:700;letter-spacing:.04em;cursor:pointer}
-button:hover{filter:brightness(1.07)}
-button:active{transform:translateY(1px)}
-button:focus-visible,input:focus-visible,select:focus-visible,.chip:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
-button.ghost{background:var(--panel2);color:var(--ink);border-color:var(--line)}
-button[disabled]{opacity:.55;cursor:progress}
-button.mini{padding:7px 11px;font-size:.82rem}
-
-main.wrap{padding-top:26px;padding-bottom:40px}
-.card{background:var(--panel);border:1px solid var(--line);padding:18px;margin-bottom:18px}
-.card>h2{font-family:var(--display);font-size:1.05rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 14px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.hidden{display:none !important}
-.muted{color:var(--muted)}
-.mono{font-family:var(--display);letter-spacing:.04em}
-.bar{height:8px;background:var(--panel2);border:1px solid var(--line);overflow:hidden}
-.bar>span{display:block;height:100%;background:var(--accent)}
-.bar.blue>span{background:var(--accent2)}
-.bar.win>span{background:var(--win)}
-
-.intro{text-align:center;padding:40px 20px;border:1px solid var(--line);background:var(--panel);margin-bottom:18px}
-.intro h1{font-family:var(--display);font-size:clamp(2rem,7vw,3.4rem);letter-spacing:.02em;margin:0 0 8px}
-.intro h1 em{color:var(--accent);font-style:normal}
-.intro p{color:var(--muted);margin:0 auto;max-width:52ch}
-.recent{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;justify-content:center}
-.chip{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:7px 11px;font-family:var(--display);font-weight:600;font-size:.85rem;cursor:pointer}
-.chip:hover{border-color:var(--accent)}
-.notice{border:1px solid var(--line);background:var(--panel);padding:16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:18px}
-.notice.err{border-color:var(--loss)}
-.notice .dot{width:10px;height:10px;background:var(--accent2);margin-top:6px;flex:0 0 auto}
-.notice.err .dot{background:var(--loss)}
-
-.sk{border:1px solid var(--line);background:linear-gradient(90deg,var(--panel) 25%,var(--panel2) 37%,var(--panel) 63%);background-size:400% 100%;animation:sh 1.3s linear infinite}
-@keyframes sh{0%{background-position:100% 0}100%{background-position:0 0}}
-@media (prefers-reduced-motion:reduce){.sk{animation:none}}
-
-.hero{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;border:1px solid var(--line);background:var(--panel);padding:18px;margin-bottom:18px}
-.hero .avatar{width:92px;height:92px;border:1px solid var(--line);background:var(--panel2);display:block}
-.hero .who{min-width:0}
-.hero h2{font-family:var(--display);font-size:clamp(1.5rem,4.5vw,2.2rem);margin:0;letter-spacing:.02em;overflow-wrap:anywhere}
-.hero .tag{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 0}
-.tagpill{font-family:var(--display);font-weight:600;font-size:.85rem;color:var(--muted);border:1px solid var(--line);background:var(--panel2);padding:3px 8px}
-.hero .club{display:inline-flex;align-items:center;gap:7px;font-size:.88rem;color:var(--muted);margin-top:8px}
-.hero .club img{width:22px;height:22px;border:1px solid var(--line)}
-.trophybox{text-align:right}
-.trophybox .big{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,6vw,2.6rem);color:var(--accent);line-height:1}
-.trophybox small{display:block;color:var(--muted);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
-.hero .progress{grid-column:1/-1;margin-top:2px}
-.hero .progress .row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:6px}
-
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
-.stat{border:1px solid var(--line);background:var(--panel2);padding:11px 12px}
-.stat b{display:block;font-family:var(--display);font-weight:700;font-size:1.45rem;letter-spacing:.02em}
-.stat small{color:var(--muted);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
-
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.summary .cell{border:1px solid var(--line);background:var(--panel2);padding:10px 12px}
-.summary .cell b{font-family:var(--display);font-size:1.3rem}
-.summary .cell small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
-.winrate{margin-bottom:16px}
-
-.battles{display:flex;flex-direction:column;gap:8px}
-.battle{display:grid;grid-template-columns:58px 1fr auto auto;gap:12px;align-items:center;border:1px solid var(--line);background:var(--panel2);padding:9px 12px}
-.battle .res{font-family:var(--display);font-weight:700;font-size:.78rem;text-align:center;padding:4px 0;border:1px solid var(--line);background:var(--panel);letter-spacing:.06em}
-.battle.victory .res{color:#0f2b1d;background:var(--win);border-color:var(--win)}
-.battle.defeat .res{color:#2b0f14;background:var(--loss);border-color:var(--loss)}
-.battle .bmeta{min-width:0}
-.battle .bmeta strong{display:block;font-size:.92rem;overflow-wrap:anywhere}
-.battle .bmeta small{color:var(--muted);font-size:.78rem}
-.battle .btime{color:var(--muted);font-size:.76rem;white-space:nowrap}
-.battle .bdrop{font-family:var(--display);font-weight:700;font-size:.95rem;min-width:52px;text-align:right}
-.battle .bdrop.up{color:var(--win)} .battle .bdrop.down{color:var(--loss)}
-.star{color:var(--accent);font-weight:700}
-@media (max-width:600px){
-  .battle{grid-template-columns:52px 1fr auto;grid-template-areas:"res meta drop" "res time drop"}
-  .battle .res{grid-area:res;align-self:stretch;display:flex;align-items:center;justify-content:center}
-  .battle .bmeta{grid-area:meta}.battle .btime{grid-area:time}.battle .bdrop{grid-area:drop}
-}
-
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.toolbar .field{flex:1 1 200px}
-select{background:var(--panel2);border:1px solid var(--line);padding:10px 8px}
-.brawlers{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.brawler{border:1px solid var(--line);background:var(--panel2);padding:10px;text-align:center;transition:border-color .12s}
-.brawler:hover{border-color:var(--accent)}
-.brawler img{width:76px;height:76px;object-fit:contain;display:block;margin:0 auto 6px}
-.brawler h3{font-family:var(--display);font-size:.95rem;margin:0 0 6px;letter-spacing:.02em;overflow-wrap:anywhere}
-.badges{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:7px}
-.badge{font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.06em;padding:2px 6px;border:1px solid var(--line);background:var(--panel);color:var(--muted)}
-.badge.pow{border-color:#6b5b1f;color:var(--accent)}
-.badge.rank{border-color:#1f4a6b;color:var(--accent2)}
-.brawler .t{font-family:var(--display);font-weight:700;font-size:1.05rem}
-.brawler .t small{display:block;font-family:var(--body);font-weight:500;color:var(--muted);font-size:.72rem}
-.empty{color:var(--muted);padding:18px;text-align:center;border:1px dashed var(--line)}
-
-footer{border-top:1px solid var(--line);margin-top:8px}
-footer .wrap{padding-top:18px;padding-bottom:34px;color:var(--muted);font-size:.8rem;line-height:1.6}
-footer strong{color:var(--ink);font-family:var(--display)}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;font-family:var(--body);font-weight:600;color:var(--ink);
+  background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.12) 1.5px,transparent 0) 0 0/22px 22px,var(--bg)}
+main{max-width:880px;margin:0 auto;padding:36px 16px 48px}
+h1{font:400 clamp(3rem,11vw,5.5rem)/1 var(--display);margin:0 0 6px;color:var(--sun);letter-spacing:.01em;
+  -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink)}
+.sub{margin:0 0 24px;color:#fff;font-weight:800;font-size:1.05rem}
+form{display:flex;gap:10px;flex-wrap:wrap}
+.field{flex:1 1 220px;display:flex;align-items:center;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:0 14px}
+.field span{font:400 1.5rem var(--display);color:#8b82c4}
+input{flex:1;min-width:0;border:0;outline:0;background:none;font:800 1.3rem var(--body);color:var(--ink);padding:14px 6px;text-transform:uppercase}
+.field:focus-within{outline:3px solid var(--sun);outline-offset:3px}
+button{font:400 1.4rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);padding:12px 28px;cursor:pointer}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+button:disabled{opacity:.6;cursor:wait}
+.msg{margin:28px 0;padding:16px 18px;background:var(--card);border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink)}
+.msg.err{background:#ffe3e6}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:18px;margin-top:26px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.name{font:400 clamp(2rem,7vw,3rem)/1.05 var(--display);margin:0;overflow-wrap:anywhere}
+.meta{margin:4px 0 0;color:#6a60a8;font-weight:800}
+.trophy{font:400 clamp(2.4rem,9vw,3.6rem)/1 var(--display);background:var(--sun);border:3px solid var(--ink);border-radius:14px;padding:6px 16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
+.stat{background:var(--soft);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font:400 1.6rem var(--display)}
+.stat small{font-weight:800;color:#6a60a8}
+h2{font:400 1.7rem var(--display);margin:0 0 12px}
+.log{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-width:44px;padding:6px 10px;text-align:center;font:400 1rem var(--display);border:3px solid var(--ink);border-radius:10px;background:var(--draw)}
+.chip.victory{background:var(--win)} .chip.defeat{background:var(--loss);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.b{background:var(--soft);border:3px solid var(--ink);border-radius:14px;padding:8px;text-align:center}
+.b img{width:84px;height:84px;object-fit:contain;display:block;margin:0 auto 4px}
+.b strong{display:block;font:400 1.05rem var(--display);overflow-wrap:anywhere}
+.b span{font-weight:800;font-size:.9rem;color:#4b3f94}
+footer{margin-top:36px;color:#cfc8f5;font-size:.8rem;font-weight:600;line-height:1.5}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="wrap">
-    <div class="brand"><span class="mark">iplaybs</span><span class="sub">brawl stars stats</span></div>
-    <form class="search" id="f" autocomplete="off" role="search">
-      <label class="field">
-        <span class="hash" aria-hidden="true">#</span>
-        <input id="tag" placeholder="Enter a player tag, e.g. 2PP0L8" aria-label="Player tag" maxlength="15" autocapitalize="characters" spellcheck="false">
-      </label>
-      <button id="go" type="submit">Search</button>
-    </form>
-  </div>
-</header>
-
-<main class="wrap">
-  <section class="intro" id="intro">
-    <h1>Track any <em>Brawl Stars</em> player</h1>
-    <p>Trophies, brawlers, club and the last 25 battles — just drop in a player tag. Find yours in game under your profile, below your name.</p>
-    <div class="recent hidden" id="recent"></div>
-  </section>
-
+<main>
+  <h1>iplaybs</h1>
+  <p class="sub">Look up any Brawl Stars player by tag.</p>
+  <form id="f" autocomplete="off">
+    <label class="field"><span>#</span><input id="tag" placeholder="2PP0L8" aria-label="Player tag" maxlength="15" autocapitalize="characters" spellcheck="false"></label>
+    <button id="go" type="submit">Search</button>
+  </form>
   <div id="out" aria-live="polite"></div>
+  <footer>Your player tag is in the game under your profile, below your name. This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it.</footer>
 </main>
-
-<footer>
-  <div class="wrap">
-    <strong>iplaybs</strong> — a fan-made stats viewer. Data comes from the official Brawl Stars API.
-    <br>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it.
-  </div>
-</footer>
-
 <script>
 const $ = s => document.querySelector(s);
 const out = $("#out"), input = $("#tag"), btn = $("#go");
-const intro = $("#intro"), recent = $("#recent");
-
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt = n => Number(n || 0).toLocaleString();
-const pretty = s => String(s || "").replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").replace(/^./, c => c.toUpperCase());
+const pretty = s => String(s || "").replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase());
 const clean = v => v.trim().toUpperCase().replace(/^#/, "").replace(/O/g, "0");
-const pct = (a, b) => b > 0 ? Math.max(0, Math.min(100, Math.round(a / b * 100))) : 0;
 
-const brawlerImg = id => `https://cdn.brawlify.com/brawlers/borderless/${id}.png`;
-const iconImg = id => `https://cdn.brawlify.com/profile-icons/regular/${id}.png`;
-const badgeImg = id => `https://cdn.brawlify.com/club-badges/regular/${id}.png`;
-
-function ago(iso){
-  if (!iso) return "";
-  const t = Date.parse(iso.replace(/([+-]\d\d)(\d\d)$/, "$1:$2"));
-  if (isNaN(t)) return "";
-  const s = Math.max(0, (Date.now() - t) / 1000);
-  if (s < 60) return "just now";
-  const m = s / 60, h = m / 60, d = h / 24;
-  if (m < 60) return Math.floor(m) + "m ago";
-  if (h < 24) return Math.floor(h) + "h ago";
-  if (d < 30) return Math.floor(d) + "d ago";
-  return new Date(t).toLocaleDateString();
-}
-function dur(sec){
-  if (!sec) return "";
-  return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
+function msg(text, err) {
+  out.innerHTML = `<div class="msg${err ? " err" : ""}">${esc(text)}</div>`;
 }
 
-let STATE = null;
-
-function notice(text, err){
-  out.innerHTML = `<div class="notice${err ? " err" : ""}"><span class="dot"></span><div>${esc(text)}</div></div>`;
-}
-
-function skeleton(){
-  out.innerHTML = `
-    <div class="hero sk" style="height:150px"></div>
-    <div class="card"><div class="stats">${'<div class="stat sk" style="height:70px"></div>'.repeat(6)}</div></div>
-    <div class="card"><div class="sk" style="height:60px"></div></div>`;
-}
-
-function renderRecent(){
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem("iplaybs:recent") || "[]"); } catch(e){}
-  if (!list.length) { recent.classList.add("hidden"); recent.innerHTML = ""; return; }
-  recent.classList.remove("hidden");
-  recent.innerHTML = list.map(t => `<button class="chip" type="button" data-tag="${esc(t)}">#${esc(t)}</button>`).join("");
-}
-function pushRecent(tag){
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem("iplaybs:recent") || "[]"); } catch(e){}
-  list = [tag, ...list.filter(t => t !== tag)].slice(0, 6);
-  try { localStorage.setItem("iplaybs:recent", JSON.stringify(list)); } catch(e){}
-  renderRecent();
-}
-
-function hero(p){
-  const avatar = p.iconId
-    ? `<img class="avatar" src="${iconImg(p.iconId)}" alt="" onerror="this.style.visibility='hidden'">`
-    : `<div class="avatar"></div>`;
-  const club = p.club
-    ? `<div class="club">${p.clubBadgeId ? `<img src="${badgeImg(p.clubBadgeId)}" alt="" onerror="this.style.visibility='hidden'">` : ""}<span>${esc(p.club)}</span>${p.clubTag ? `<span class="tagpill">${esc(p.clubTag)}</span>` : ""}</div>`
-    : "";
-  const prog = pct(p.trophies, p.highestTrophies || p.trophies);
-  return `
-  <section class="hero">
-    ${avatar}
-    <div class="who">
-      <h2>${esc(p.name)}</h2>
-      <div class="tag">
-        <span class="tagpill">${esc(p.tag)}</span>
-        <button class="ghost mini" type="button" id="copytag">Copy tag</button>
-        <button class="ghost mini" type="button" id="copylink">Copy link</button>
-      </div>
-      ${club}
-    </div>
-    <div class="trophybox">
-      <div class="big">${fmt(p.trophies)}</div>
-      <small>Trophies</small>
-    </div>
-    <div class="progress">
-      <div class="row"><span>Peak ${fmt(p.highestTrophies)}</span><span>${prog}% of peak</span></div>
-      <div class="bar"><span style="width:${prog}%"></span></div>
-    </div>
-  </section>`;
-}
-
-function statCard(p){
-  const s = (v, l) => `<div class="stat"><b>${esc(v)}</b><small>${l}</small></div>`;
-  const wins = (Number(p.v3) || 0) + (Number(p.solo) || 0) + (Number(p.duo) || 0);
-  return `<section class="card"><h2>Overview</h2><div class="stats">
-    ${s(fmt(p.trophies), "Trophies")}
-    ${s(fmt(p.highestTrophies), "Peak")}
-    ${s(p.expLevel, "XP level")}
-    ${s(fmt(wins), "Total wins")}
-    ${s(fmt(p.v3), "3v3 wins")}
-    ${s(fmt(p.solo), "Solo wins")}
-    ${s(fmt(p.duo), "Duo wins")}
-    ${s(p.brawlers.length, "Brawlers")}
-  </div></section>`;
-}
-
-function battlesCard(battles){
-  if (!battles.length) return "";
-  let w = 0, l = 0;
-  battles.forEach(b => { if (b.result === "victory") w++; else if (b.result === "defeat") l++; });
-  const decided = w + l;
-  const rate = decided ? Math.round(w / decided * 100) : 0;
-
-  const rows = battles.map(b => {
-    const rc = b.result || "";
-    const res = b.result ? b.result.toUpperCase() : (b.rank ? "RANK " + b.rank : "—");
-    const drop = b.trophyChange != null && b.trophyChange !== 0
-      ? `<span class="bdrop ${b.trophyChange > 0 ? "up" : "down"}">${b.trophyChange > 0 ? "+" : ""}${b.trophyChange}</span>`
-      : `<span class="bdrop">—</span>`;
-    const sub = [b.map, b.type ? pretty(b.type) : "", dur(b.duration)].filter(Boolean).join(" · ");
-    return `<div class="battle ${esc(rc)}">
-      <span class="res">${esc(res)}</span>
-      <span class="bmeta"><strong>${esc(pretty(b.mode) || "Battle")}</strong><small>${esc(sub)}</small></span>
-      <span class="btime">${esc(ago(b.time))}</span>
-      ${drop}
-    </div>`;
+function render({ player: p, battles }) {
+  const stat = (v, l) => `<div class="stat"><b>${esc(v)}</b><small>${l}</small></div>`;
+  const chips = battles.map(b => {
+    const label = b.result ? b.result.slice(0, 1).toUpperCase() : (b.rank ? "#" + b.rank : "–");
+    const title = [pretty(b.mode), b.map, b.trophyChange ? (b.trophyChange > 0 ? "+" : "") + b.trophyChange + " trophies" : ""].filter(Boolean).join(", ");
+    return `<div class="chip ${esc(b.result || "")}" title="${esc(title)}">${esc(label)}</div>`;
   }).join("");
+  const brawlers = [...p.brawlers].sort((a, b) => b.trophies - a.trophies).map(b => `
+    <div class="b">
+      <img src="https://cdn.brawlify.com/brawlers/borderless/${b.id}.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <strong>${esc(b.name)}</strong>
+      <span>${fmt(b.trophies)} trophies · Power ${b.power}</span>
+    </div>`).join("");
 
-  return `<section class="card">
-    <h2>Recent battles <span class="muted mono">last ${battles.length}</span></h2>
-    <div class="summary">
-      <div class="cell"><b style="color:var(--win)">${w}</b><small>Wins</small></div>
-      <div class="cell"><b style="color:var(--loss)">${l}</b><small>Losses</small></div>
-      <div class="cell"><b>${rate}%</b><small>Win rate</small></div>
-    </div>
-    <div class="bar win winrate"><span style="width:${rate}%"></span></div>
-    <div class="battles">${rows}</div>
-  </section>`;
-}
-
-function brawlersCard(brawlers){
-  if (!brawlers.length) return "";
-  return `<section class="card">
-    <h2>Brawlers <span class="muted mono" id="bcount">${brawlers.length}</span></h2>
-    <div class="toolbar">
-      <label class="field"><input id="bsearch" placeholder="Filter brawlers by name" aria-label="Filter brawlers" spellcheck="false"></label>
-      <select id="bsort" aria-label="Sort brawlers">
-        <option value="trophies">Sort: Trophies</option>
-        <option value="power">Sort: Power</option>
-        <option value="rank">Sort: Rank</option>
-        <option value="name">Sort: Name</option>
-      </select>
-    </div>
-    <div class="brawlers" id="bgrid"></div>
-  </section>`;
-}
-
-function renderBrawlers(){
-  const grid = $("#bgrid");
-  if (!grid || !STATE) return;
-  const q = ($("#bsearch").value || "").trim().toLowerCase();
-  const sort = $("#bsort").value;
-  const list = STATE.player.brawlers.filter(b => !q || b.name.toLowerCase().includes(q));
-  list.sort((a, b) => sort === "name" ? a.name.localeCompare(b.name) : (Number(b[sort] || 0) - Number(a[sort] || 0)));
-  $("#bcount").textContent = list.length;
-  grid.innerHTML = list.length ? list.map(b => `
-    <article class="brawler">
-      <img src="${brawlerImg(b.id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
-      <h3>${esc(b.name)}</h3>
-      <div class="badges">
-        <span class="badge pow">PWR ${b.power}</span>
-        <span class="badge rank">RANK ${b.rank}</span>
+  out.innerHTML = `
+    <section class="card">
+      <div class="head">
+        <div><h2 class="name">${esc(p.name)}</h2><p class="meta">${esc(p.tag)}${p.club ? " – " + esc(p.club) : ""}</p></div>
+        <div class="trophy">${fmt(p.trophies)}</div>
       </div>
-      <div class="t">${fmt(b.trophies)}<small>best ${fmt(b.highestTrophies)}</small></div>
-    </article>`).join("") : `<div class="empty">No brawlers match "${esc(q)}".</div>`;
+      <div class="stats">
+        ${stat(fmt(p.highestTrophies), "Highest trophies")}
+        ${stat(p.expLevel, "Level")}
+        ${stat(fmt(p.v3), "3v3 wins")}
+        ${stat(fmt(p.solo), "Solo wins")}
+        ${stat(fmt(p.duo), "Duo wins")}
+        ${stat(p.brawlers.length, "Brawlers")}
+      </div>
+    </section>
+    ${battles.length ? `<section class="card"><h2>Recent battles</h2><div class="log">${chips}</div></section>` : ""}
+    <section class="card"><h2>Brawlers</h2><div class="grid">${brawlers}</div></section>`;
+
 }
 
-function render(data){
-  STATE = data;
-  const p = data.player;
-  out.innerHTML = hero(p) + statCard(p) + battlesCard(data.battles || []) + brawlersCard(p.brawlers || []);
-  intro.classList.add("hidden");
-
-  $("#copytag").addEventListener("click", () => copy(p.tag, "Tag copied"));
-  $("#copylink").addEventListener("click", () => copy(location.origin + "/?tag=" + encodeURIComponent(p.tag.replace(/^#/, "")), "Link copied"));
-
-  const s = $("#bsearch"), so = $("#bsort");
-  if (s) s.addEventListener("input", renderBrawlers);
-  if (so) so.addEventListener("change", renderBrawlers);
-  renderBrawlers();
-}
-
-function copy(text, note){
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => flash(note)).catch(() => flash("Copy failed"));
-  } else {
-    flash("Copy unavailable");
-  }
-}
-function flash(text){
-  const el = document.createElement("div");
-  el.className = "notice";
-  el.innerHTML = `<span class="dot"></span><div>${esc(text)}</div>`;
-  out.insertBefore(el, out.firstChild);
-  setTimeout(() => el.remove(), 1600);
-}
-
-async function lookup(raw){
+async function lookup(raw) {
   const tag = clean(raw);
-  if (!tag) { notice("Enter a player tag to see stats.", true); return; }
-  input.value = tag;
+  if (!tag) return msg("Enter a player tag to see stats.", true);
   btn.disabled = true;
-  skeleton();
+  msg("Loading…");
   try {
     const r = await fetch("/api/player?tag=" + encodeURIComponent(tag));
     const d = await r.json();
-    if (!r.ok) { notice(d.error || "Something went wrong. Try again.", true); return; }
+    if (!r.ok) return msg(d.error || "Something went wrong. Try again.", true);
     render(d);
-    pushRecent(tag);
     history.replaceState(null, "", "?tag=" + tag);
-    try { localStorage.setItem("iplaybs:tag", tag); } catch(e){}
+    try { localStorage.setItem("iplaybs:tag", tag); } catch (e) {}
   } catch (e) {
-    notice("Couldn’t reach the server. Check your connection and try again.", true);
+    msg("Couldn’t reach the server. Check your connection and try again.", true);
   } finally {
     btn.disabled = false;
   }
 }
 
 $("#f").addEventListener("submit", e => { e.preventDefault(); lookup(input.value); });
-recent.addEventListener("click", e => {
-  const c = e.target.closest("[data-tag]");
-  if (c) lookup(c.dataset.tag);
-});
 
-renderRecent();
 let start = new URLSearchParams(location.search).get("tag");
-if (!start) { try { start = localStorage.getItem("iplaybs:tag"); } catch(e){} }
+if (!start) { try { start = localStorage.getItem("iplaybs:tag"); } catch (e) {} }
 if (start) { input.value = start; lookup(start); }
 </script>
 </body>
