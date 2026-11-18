@@ -28,28 +28,39 @@ module.exports = async (req, res) => {
     const p = await pr.json();
     const log = br.ok ? await br.json() : { items: [] };
 
+    const club = p.club
+      ? { name: p.club.name, tag: p.club.tag, badgeId: p.club.badgeId }
+      : null;
+
     const player = {
       name: p.name,
       tag: p.tag,
+      iconId: p.icon && p.icon.id ? p.icon.id : null,
       trophies: p.trophies,
       highestTrophies: p.highestTrophies,
       expLevel: p.expLevel,
       v3: p["3vs3Victories"],
       solo: p.soloVictories,
       duo: p.duoVictories,
-      club: p.club && p.club.name ? p.club.name : null,
+      club: club ? club.name : null,
+      clubBadgeId: club ? club.badgeId : null,
+      clubTag: club ? club.tag : null,
       brawlers: (p.brawlers || []).map((b) => ({
         id: b.id, name: b.name, power: b.power, rank: b.rank,
         trophies: b.trophies, highestTrophies: b.highestTrophies,
       })),
     };
 
-    const battles = (log.items || []).slice(0, 12).map((i) => ({
+    const battles = (log.items || []).slice(0, 25).map((i) => ({
+      time: i.battleTime,
       mode: (i.event && i.event.mode) || (i.battle && i.battle.mode) || "",
+      type: (i.battle && i.battle.type) || "",
       map: (i.event && i.event.map) || "",
       result: i.battle && i.battle.result,
       rank: i.battle && i.battle.rank,
       trophyChange: i.battle && i.battle.trophyChange,
+      duration: i.battle && i.battle.duration,
+      starPlayer: i.battle && i.battle.starPlayer ? i.battle.starPlayer.tag : null,
     }));
 
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
