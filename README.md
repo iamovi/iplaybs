@@ -17,3 +17,6 @@ vercel dev
 
 ## Rotate the key
 Create a new key at developer.brawlstars.com, update `BS_KEY` in Vercel, redeploy.
+
+## Features
+Player profile, battle log with details, trophy graph (rebuilt from battles + saved visits), club + members, top-200 rankings (players/clubs/per-brawler, by country), event rotation, full brawler catalog. `api/player.js` serves the player; `api/bs.js` proxies the rest.
